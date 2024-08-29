@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一次方程式の練習</title>
+    <style>
+        /* スタイルはそのまま */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        #container {
+            width: 90%;
+            max-width: 960px;
+            height: auto;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        #header {
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        #problem-area {
+            width: 100%;
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #input-area {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #input-area input {
+            width: 80%;
+            max-width: 150px;
+            padding: 10px;
+            font-size: 1.2em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #feedback-area {
+            width: 100%;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #feedback-area.correct {
+            color: #27ae60;
+        }
+
+        #feedback-area.incorrect {
+            color: #e74c3c;
+        }
+
+        #button-area {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #button-area button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #ffffff;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #button-area button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 600px) {
+            #header {
+                font-size: 1.2em;
+            }
+
+            #problem-area, #input-area, #feedback-area, #button-area {
+                font-size: 1em;
+            }
+
+            #input-area input {
+                width: 90%;
+                font-size: 1em;
+            }
+
+            #button-area button {
+                font-size: 1em;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">一次方程式の練習</div>
+        <div id="problem-area">問題がここに表示されます</div>
+        <div id="input-area">
+            <label for="user-answer">x = </label>
+            <input type="text" id="user-answer" placeholder="?">
+        </div>
+        <div id="feedback-area"></div>
+        <div id="button-area">
+            <button onclick="generateProblem()">次の問題</button>
+            <button onclick="checkAnswer()">答え合わせ</button>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswer = 0;
+
+        function generateProblem() {
+            let a, d, b, c;
+
+            // dが0または1にならないようにループ
+            do {
+                a = Math.floor(Math.random() * 10) + 1;
+                d = Math.floor(Math.random() * 21) - 10;
+            } while (d === 0 || d === 1);
+
+            b = Math.floor(Math.random() * 21) - 10;
+            c = a * d + b;
+            correctAnswer = d;
+
+            let problemText = `${a === 1 ? '' : a}x`;
+            if (b !== 0) problemText += ` ${b > 0 ? '+ ' : '- '}${Math.abs(b)}`;
+            problemText += ` = ${c}`;
+
+            document.getElementById('problem-area').textContent = problemText;
+            document.getElementById('feedback-area').textContent = '';
+            document.getElementById('user-answer').value = '';
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('user-answer').value, 10);
+            const feedbackArea = document.getElementById('feedback-area');
+
+            if (isNaN(userAnswer)) {
+                feedbackArea.textContent = '正しい数値を入力してください。';
+                feedbackArea.className = 'feedback-area incorrect';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                feedbackArea.textContent = '正解です！';
+                feedbackArea.className = 'feedback-area correct';
+            } else {
+                feedbackArea.textContent = `惜しいです!正しい答えは ${correctAnswer} です。`;
+                feedbackArea.className = 'feedback-area incorrect';
+            }
+        }
+
+        // ページ読み込み時に最初の問題を生成
+        window.onload = generateProblem;
+    </script>
+</body>
+</html>
